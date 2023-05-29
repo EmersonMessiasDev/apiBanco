@@ -13,7 +13,7 @@ class BancoViewSet(ModelViewSet):
     serializer_class = BancoSerializers
     
     
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['put'])
     def deposito(self, request, pk=None):
         banco = self.get_object()
         serializer = self.get_serializer(banco)
@@ -29,7 +29,7 @@ class BancoViewSet(ModelViewSet):
 
 
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['put'])
     def saque(self, request, pk=None):
         banco = self.get_object()
         serializer = self.get_serializer(banco)
@@ -48,7 +48,7 @@ class BancoViewSet(ModelViewSet):
 
 
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['put'])
     def transferencia(self, request, pk=None):
         banco_origem = self.get_object()
         serializer = self.get_serializer(banco_origem)
@@ -63,6 +63,9 @@ class BancoViewSet(ModelViewSet):
             conta_destino = Banco.objects.get(id=conta_destino_id)
         except Banco.DoesNotExist:
             return Response({'error': 'Conta de destino não encontrada.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if Decimal(str(valor)) <= 0:
+            return Response({'error': 'O valor da transferência deve ser maior que zero.'}, status=status.HTTP_400_BAD_REQUEST)
         
         if banco_origem.saldo >= Decimal(str(valor)):
             banco_origem.saldo -= Decimal(str(valor))
