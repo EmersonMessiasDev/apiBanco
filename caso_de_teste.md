@@ -22,22 +22,20 @@ VS = VALOR SAQUE | V = VALOR | N = NUMERO DE NOTAS | R = RESULTADO
 # Depositar
 1. Valor do depósito maior que zero
 2. Conta bancária válida (existente)
-3. Operação de depósito bem-sucedida
-4. Atualização correta do saldo após o depósito
+
 
 
 ## Tabela
                  v              I
 1. Valor dep  |1. V > 0       |2. V =< 0
 2. Conta exi  |3. C == True   |4. C == False
-3. Operação   |5. D foi feito |6. D não foi feito
-4. Saldo Atual|7. S.A == S + V|8. S.A != S+V      
+    
 
 
 ##  Plano de teste
-                  V.D - C.E - OP - S.A - R    V.D - C.E - OP - S.A - R      V.D - C.E - OP - S.A - R 
-Plano_Teste =   |( 75,   S,    S,   S ➜ OK), ( 0,   S,    N,   N ➜ NO),   (80,   N,    N,   N ➜ NO),
-                |    (1, 3, 5, 7)                   (2, 3, 6, 8)                (1,3,6,8)
+                  V.D - C.E  - R    V.D - C.E  - R      V.D - C.E  - R 
+Plano_Teste =   |( 75,   S,  ➜ OK), ( 0,   S,  ➜ NO),   (80,   N, ➜ NO),
+                |    (1, 3,)            (2, 3,)                (1,3)
 
 
 Legenda:
@@ -48,20 +46,22 @@ V.D = VALOR DEPOSITO | C.E = CONTA EXISTE |OP = OPERAÇÃO REALIZADA | S.A = SAL
 2. Conta de origem válida (existente)
 3. Conta de destino válida (existente)
 4. Saldo na conta de origem maior ou igual ao valor da transferência
-5. Operação de transferência bem-sucedida
-6. Atualização correta do saldo na conta de origem após a transferência
-7. Atualização correta do saldo na conta de destino após a transferência
 
 
 ## Tabela
-
+                 v              I
+1. Valor tra    |1. V > 0       |2. V =< 0
+2. Conta D exi  |3. C.D == True |4. C.D == False
+3. Conta O exi  |5. C.O == True |6. C.O == False
+4. Saldo O      |7. S.O >= V.T  |8. S.O <= V.T  
 
 
 ##  Plano de teste
-
-
+                  V.T - S.O  - C.O - C.D  - R       V.T - S.O  - C.O - C.D  - R      V.T - S.O  - C.O - C.D  - R
+Plano_Teste =   |( 100,  200,  True,  True ➜ OK), ( 520, 510, True,  True  ➜ NO), (250, 250, True,  False ➜ NO ),
+                |      (1, 7, 5, 3)                        (1, 8, 5, 3)                (1, 7 , 5, 4)
 
 
 Legenda:
-VS = VALOR SAQUE | V = VALOR | N = NUMERO DE NOTAS | R = RESULTADO
+VT = VALOR TRANFERENCIA | S.O = SALDO ORIGEM | C.O = CONTA ORIGEM | C.D = CONTA DESTINO
 

@@ -17,14 +17,17 @@ class BancoViewSet(ModelViewSet):
     def deposito(self, request, pk=None):
         banco = self.get_object()
         serializer = self.get_serializer(banco)
-        
+
         valor = request.data.get('valor')
         if valor is None:
             return Response({'error': 'Informe o valor para o depósito.'}, status=status.HTTP_400_BAD_REQUEST)
-        
+            
+        if Decimal(str(valor)) < 0:
+            return Response({'error': 'Valor de depósito não pode ser negativo.'}, status=status.HTTP_400_BAD_REQUEST)
+
         banco.saldo += Decimal(str(valor))
         banco.save()
-        
+
         return Response(serializer.data)
 
 
@@ -38,13 +41,17 @@ class BancoViewSet(ModelViewSet):
         if valor is None:
             return Response({'error': 'Informe o valor para o saque.'}, status=status.HTTP_400_BAD_REQUEST)
         
-        if banco.saldo >= Decimal(str(valor)):
-            banco.saldo -= Decimal(str(valor))
-            banco.save()
-        else:
+        valor = Decimal(str(valor))  # Converta o valor para Decimal aqui para evitar repetir esse processo
+
+        if valor > banco.saldo:  # Se o valor do saque for maior que o saldo
             return Response({'error': 'Saldo insuficiente.'}, status=status.HTTP_400_BAD_REQUEST)
         
+        # Se o valor do saque for igual ou menor que o saldo
+        banco.saldo -= valor
+        banco.save()
+
         return Response(serializer.data)
+
 
 
 
